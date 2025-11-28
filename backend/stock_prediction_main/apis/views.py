@@ -45,10 +45,11 @@ class StockPredictionView(APIView):
             MA_100 = df['Close'].rolling(window=100).mean()
             plt.switch_backend('AGG')
             plt.figure(figsize=(10,5))
-            plt.plot(df['Close'])
-            plt.plot(MA_100,'r')
+            plt.plot(df['Close'], label='Closing Price')
+            plt.plot(MA_100,'r',label='100 day moving average')
             plt.xlabel("Day Number")
             plt.ylabel("Closing Price")
+            plt.legend()
             plt.title(f"{ticker} Closing Price vs 100 Day Number Moving Average")
             # save the plot to a file
             plot_image_100_MA = save_plot(plt, ticker, '100_MA_plot')
@@ -58,10 +59,11 @@ class StockPredictionView(APIView):
             MA_200 = df['Close'].rolling(window=200).mean()
             plt.switch_backend('AGG')
             plt.figure(figsize=(10,5))
-            plt.plot(df['Close'])
-            plt.plot(MA_200,'g')
+            plt.plot(df['Close'], label='Closing Price')
+            plt.plot(MA_200,'g',label='200 day moving average')
             plt.xlabel("Days")
             plt.ylabel("price")
+            plt.legend()
             plt.title(f"{ticker} Closing Price vs 200Day Number Moving Average")
             plot_image_200_MA = save_plot(plt, ticker, '200_MA_plot')
 
@@ -73,7 +75,8 @@ class StockPredictionView(APIView):
             scaler = MinMaxScaler(feature_range=(0,1))
 
             # Load Pre trained Model
-            model = load_model('stock_prediction_model.keras')
+            model = load_model(r"C:\Users\sejal singh\Django_React_project\stock_prediction_model.keras")
+
 
 
             # prepare test data
@@ -114,7 +117,7 @@ class StockPredictionView(APIView):
             #Root mean square
             mse = mean_squared_error(y_test, y_predicted)
             # root mean suared error(RMSE)
-            rmse = np.sqrt(mse)
+            # rmse = np.sqrt(mse)
             # R-squared
             r2 = r2_score(y_test, y_predicted)
             
@@ -123,6 +126,5 @@ class StockPredictionView(APIView):
             return Response({'status': 'success', 
             'plot_image':plot_image, 'plot_image_100_MA':plot_image_100_MA, 'plot_image_200_MA':plot_image_200_MA, 
             'plot_image_test': plot_image_test,
-            'RMSE': rmse,
-            'R2_Score': r2,
+            'r2': r2,
             'mse':mse})

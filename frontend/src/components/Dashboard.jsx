@@ -1,5 +1,4 @@
 import { useEffect, useState} from "react"
-import axios from "axios";
 import axiosInstance from "../axiosInstances";
 const Dashboard = () => {
     const [ticker, setTicker] = useState("")
@@ -9,6 +8,9 @@ const Dashboard = () => {
     const [plot100, setPlot100] = useState()
     const [plot200, setPlot200] = useState()
     const [finalPlot, setFinalPLot] = useState()
+    const [mse, setMSE] = useState(null)
+    // const [rmse, setRMSE] = useState(null)
+    const [r2, setR2] = useState(null)
     useEffect(() => {
         const fetchProtectedData = async () => {
             try {
@@ -36,6 +38,9 @@ const Dashboard = () => {
             setPlot200(plot200Url)
             const finalPlotUrl = `${backendRoot}${response.data.plot_image_test}`
             setFinalPLot(finalPlotUrl)
+            setMSE(response.data.mse)
+            // setRMSE(response.data.rmse)
+            setR2(response.data.r2)
 
            if(response.data.error){
             setError(response.data.error)
@@ -64,7 +69,8 @@ const Dashboard = () => {
                     </form>
                 </div>
                 {/* print prediction plots */}
-                <div className="predicyion mt-5">
+                {finalPlot && 
+                (<div className="predicyion mt-5">
                     <div className="p-3">
                         {plot && <img src={plot} alt="Prediction Plot" className="img-fluid" />}
                     </div>
@@ -77,7 +83,15 @@ const Dashboard = () => {
                     <div className="p-3">
                         {plot200 && <img src={finalPlot} alt="Prediction Plot 200 MA" className="img-fluid" />}
                     </div>
+                    <div className="text-light p-3">
+                        <h4>Model Evaluation</h4>
+                        <p>Mean Squared Error :{mse}</p>
+                        {/* <p>Root Mean Squared Error :{rmse}</p> */}
+                        <p>R2 Score :{r2}</p>
+                    </div>
                 </div>
+                )}
+               
             </div>
           </div>
         </>
