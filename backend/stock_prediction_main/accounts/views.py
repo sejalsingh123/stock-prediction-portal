@@ -1,3 +1,4 @@
+from urllib import request
 from django.shortcuts import render
 from .serializers import UserSerializer
 from rest_framework import generics
@@ -10,6 +11,8 @@ class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [AllowAny] 
+
+
 
 
 class ProtectedView(APIView):

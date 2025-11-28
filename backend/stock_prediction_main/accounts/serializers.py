@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
+from .utils import send_welcome_email
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, min_length=4, style={'input_type': 'password'})
@@ -14,4 +15,7 @@ class UserSerializer(serializers.ModelSerializer):
             validated_data['email'],
             validated_data['password']
         )
+        # Send welcome email
+        send_welcome_email(user.email, user.username)
+        print("WELCOME EMAIL SENT!")
         return user
